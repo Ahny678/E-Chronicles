@@ -54,7 +54,7 @@ export class DiaryController {
   }
 
   @Delete(':id')
-  delete() {
-    return [];
+  delete(@Param('id') id: string) {
+    return this.diaryService.delete(id);
   }
 }

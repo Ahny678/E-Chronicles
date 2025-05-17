@@ -91,4 +91,9 @@ export class DiaryService {
       data: newBody,
     });
   }
+  async delete(id: string) {
+    return this.prismaService.diaryEntry.delete({
+      where: { id },
+    });
+  }
 }
