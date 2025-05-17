@@ -3,23 +3,21 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateEntryDto } from './dtos/create-diary.dto';
+import { UpdateEntryDto } from './dtos/update-diary.dto';
 
 @Controller('diary')
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
-
-  @Get()
-  findAll() {
-    return [];
-  }
 
   @Post()
   //for accepting multipart form data
@@ -42,13 +40,17 @@ export class DiaryController {
     return await this.diaryService.create(files, body);
   }
 
+  @Get()
+  findAll(@Query('mood') mood?: string) {
+    return this.diaryService.findAll(mood);
+  }
   @Get(':id')
-  findOne() {
-    return [];
+  findOne(@Param('id') id: string) {
+    return this.diaryService.findOne(id);
   }
   @Patch(':id')
-  update() {
-    return [];
+  update(@Param('id') id: string, @Body() newBody: UpdateEntryDto) {
+    return this.diaryService.fixOne(id, newBody);
   }
 
   @Delete(':id')

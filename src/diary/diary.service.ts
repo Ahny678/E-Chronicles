@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEntryDto } from './dtos/create-diary.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { UpdateEntryDto } from './dtos/update-diary.dto';
 
 @Injectable()
 export class DiaryService {
@@ -71,5 +72,23 @@ export class DiaryService {
       console.error('Error creating diary entry:', error);
       throw new InternalServerErrorException('Failed to create diary entry');
     }
+  }
+
+  async findAll(mood?: string) {
+    return await this.prismaService.diaryEntry.findMany({
+      where: mood ? { mood } : {},
+    });
+  }
+
+  async findOne(id: string) {
+    return await this.prismaService.diaryEntry.findUnique({
+      where: { id },
+    });
+  }
+  async fixOne(id: string, newBody: UpdateEntryDto) {
+    return await this.prismaService.diaryEntry.update({
+      where: { id },
+      data: newBody,
+    });
   }
 }
