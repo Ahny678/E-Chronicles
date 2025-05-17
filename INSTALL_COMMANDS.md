@@ -12,6 +12,15 @@ cd e-chronicles
 npm install prisma --save-dev
 npm install @prisma/client
 
+# Handling multipart form data, use multer from express
+
+npm install --save-dev @types/express
+npm install --save-dev @types/multer
+
+# uploading to cloudinary
+
+npm install buffer-to-stream
+
 # 4. Install file upload and validation libraries
 
 npm install @nestjs/platform-express multer
