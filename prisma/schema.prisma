@@ -24,3 +24,13 @@ model DiaryEntry{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model User{
+  id  String  @id @default(uuid())
+  name String 
+  password String
+  email String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
