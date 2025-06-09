@@ -6,10 +6,12 @@ import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-  @Post()
+  @Post('signup')
   async signup(@Body() data: SignupDto) {
     return await this.authService.signup(data);
   }
   @Post('login')
-  login(@Body() authPayload: AuthPayloadDto) {}
+  login(@Body() authPayload: AuthPayloadDto) {
+    return this.authService.validateUser(authPayload);
+  }
 }
