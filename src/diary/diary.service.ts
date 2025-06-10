@@ -4,6 +4,7 @@ import { CreateEntryDto } from './dtos/create-diary.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UpdateEntryDto } from './dtos/update-diary.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { userInfo } from 'os';
 
 @Injectable()
 export class DiaryService {
@@ -19,6 +20,7 @@ export class DiaryService {
       audio?: Express.Multer.File[];
     },
     body: CreateEntryDto,
+    userId: string,
   ) {
     try {
       // Initialize URLs for media
@@ -65,6 +67,7 @@ export class DiaryService {
           image: imageUrl,
           video: videoUrl,
           audio: audioUrl,
+          userId: userId,
         },
       });
 
@@ -75,9 +78,12 @@ export class DiaryService {
     }
   }
 
-  async findAll(mood?: string) {
+  async findAll(userId: string, mood?: string) {
     return await this.prismaService.diaryEntry.findMany({
-      where: mood ? { mood } : {},
+      where: {
+        userId,
+        ...(mood ? { mood } : {}),
+      },
     });
   }
 

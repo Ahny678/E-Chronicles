@@ -22,6 +22,7 @@ import { AuthGuard } from 'src/guards/auth/auth.guard';
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   //for accepting multipart form data
   @UseInterceptors(
@@ -39,24 +40,29 @@ export class DiaryController {
       audio?: Express.Multer.File[];
     },
     @Body() body: CreateEntryDto,
+    @Req() { user },
   ) {
-    return await this.diaryService.create(files, body);
+    const userId = user.id;
+    return await this.diaryService.create(files, body, userId);
   }
   @UseGuards(AuthGuard)
   @Get()
   findAll(@Req() { user }, @Query('mood') mood?: string) {
-    console.log(user);
-    return this.diaryService.findAll(mood);
+    const userId = user.id;
+    return this.diaryService.findAll(userId, mood);
   }
+
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.diaryService.findOne(id);
   }
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() newBody: UpdateEntryDto) {
     return this.diaryService.fixOne(id, newBody);
   }
-
+  @UseGuards(AuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.diaryService.delete(id);
