@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEntryDto } from './dtos/create-diary.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UpdateEntryDto } from './dtos/update-diary.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class DiaryService {
@@ -81,9 +82,13 @@ export class DiaryService {
   }
 
   async findOne(id: string) {
-    return await this.prismaService.diaryEntry.findUnique({
+    const entry = await this.prismaService.diaryEntry.findUnique({
       where: { id },
     });
+    if (!entry) {
+      return 'Entry does not exit';
+    }
+    return entry;
   }
   async fixOne(id: string, newBody: UpdateEntryDto) {
     return await this.prismaService.diaryEntry.update({
@@ -92,8 +97,19 @@ export class DiaryService {
     });
   }
   async delete(id: string) {
-    return this.prismaService.diaryEntry.delete({
-      where: { id },
-    });
+    try {
+      const deletedEntry = await this.prismaService.diaryEntry.delete({
+        where: { id },
+      });
+      return deletedEntry;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        // Record not found
+        throw new Error(`Diary entry with id '${id}' does not exist.`);
+      }
+    }
   }
 }

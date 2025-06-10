@@ -7,13 +7,16 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateEntryDto } from './dtos/create-diary.dto';
 import { UpdateEntryDto } from './dtos/update-diary.dto';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Controller('diary')
 export class DiaryController {
@@ -39,9 +42,10 @@ export class DiaryController {
   ) {
     return await this.diaryService.create(files, body);
   }
-
+  @UseGuards(AuthGuard)
   @Get()
-  findAll(@Query('mood') mood?: string) {
+  findAll(@Req() { user }, @Query('mood') mood?: string) {
+    console.log(user);
     return this.diaryService.findAll(mood);
   }
   @Get(':id')

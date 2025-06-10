@@ -44,7 +44,7 @@ export class AuthService {
     const payload = {
       name: existingUser.name,
       email: existingUser.email,
-      sub: existingUser.id,
+      id: existingUser.id,
     };
 
     // Sign and return the JWT token
