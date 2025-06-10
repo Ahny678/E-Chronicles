@@ -17,6 +17,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateEntryDto } from './dtos/create-diary.dto';
 import { UpdateEntryDto } from './dtos/update-diary.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { OwnerGuard } from 'src/guards/owner/owner.guard';
 
 @Controller('diary')
 export class DiaryController {
@@ -52,17 +53,17 @@ export class DiaryController {
     return this.diaryService.findAll(userId, mood);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, OwnerGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.diaryService.findOne(id);
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, OwnerGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() newBody: UpdateEntryDto) {
     return this.diaryService.fixOne(id, newBody);
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, OwnerGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.diaryService.delete(id);
