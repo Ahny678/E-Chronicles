@@ -3,9 +3,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
 import { SignupDto } from 'src/auth/dtos/signup.dto';
+import { MailerService } from 'src/mailer/mailer.service';
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private mailerService: MailerService,
+  ) {}
 
   async createuser(data: SignupDto) {
     try {
@@ -20,12 +24,19 @@ export class UsersService {
           password: hashedPassword,
         },
       });
+
+      await this.mailerService.sendEmail({
+        receipients: [{ name, address: email }],
+        subject: '🎉 Welcome to Our App!',
+        html: `<h1>Hi ${name},</h1><p>Your account was created successfully.</p>`,
+      });
+
       return { name, email };
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error('Error creating user:', err.message); // safe access
+        console.error('Error creating user:', err.message);
       } else {
-        console.error('Unknown error creating user', err); // safe fallback
+        console.error('Unknown error creating user', err);
       }
 
       throw new InternalServerErrorException('Failed to create user');
