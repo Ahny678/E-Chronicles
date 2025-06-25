@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-export type AttributeSet = Set<string>;
 
 export type UserWithPreferences = Prisma.UserGetPayload<{
   include: {
