@@ -9,6 +9,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MailerModule } from './mailer/mailer.module';
+import { RecommendationModule } from './recommendation/recommendation.module';
+import { UsersController } from './users/users.controller';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -23,6 +26,7 @@ import { MailerModule } from './mailer/mailer.module';
     AuthModule,
     UsersModule,
     MailerModule,
+    RecommendationModule,
   ],
   controllers: [AppController],
   providers: [

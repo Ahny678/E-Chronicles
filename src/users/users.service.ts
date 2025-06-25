@@ -25,13 +25,13 @@ export class UsersService {
         },
       });
 
-      await this.mailerService.sendEmail({
-        receipients: [{ name, address: email }],
-        subject: '🎉 Welcome to Our App!',
-        html: `<h1>Hi ${name},</h1><p>Your account was created successfully.</p>`,
-      });
+      // await this.mailerService.sendEmail({
+      //   receipients: [{ name, address: email }],
+      //   subject: '🎉 Welcome to Our App!',
+      //   html: `<h1>Hi ${name},</h1><p>Your account was created successfully.</p>`,
+      // });
 
-      return { name, email };
+      // return { name, email };
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error('Error creating user:', err.message);
@@ -45,4 +45,29 @@ export class UsersService {
   async findByEmail(email: string) {
     return this.prismaService.user.findUnique({ where: { email } });
   }
+
+  async updateUserPreferences(userId, dto) {
+    return this.prismaService.attributes.upsert({
+      where: { userId },
+      //If such a record exists, the update block will be used. If not, the create block will be used.
+      update: { ...dto },
+      create: {
+        userId,
+        ...dto,
+      },
+    });
+  }
+  async updatePreferredPreferences(userId, dto) {
+    return this.prismaService.attributes.upsert({
+      where: { userId },
+      update: { ...dto },
+      create: {
+        userId,
+        ...dto,
+      },
+    });
+  }
 }
+
+//seed users
+//view top 5 matches

@@ -1,0 +1,22 @@
+import { Body, Controller, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { UpdatePreferencesDto } from './dtos/update-pref.dtos';
+import { UpdateAttributesDto } from './dtos/update-attr.dto';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
+
+@UseGuards(AuthGuard)
+@Controller('users')
+export class UsersController {
+  constructor(private userService: UsersService) {}
+  @Patch('attributes')
+  updateUserPreferences(@Req() req, @Body() dto: UpdatePreferencesDto) {
+    const userId = req.user.id;
+    return this.userService.updateUserPreferences(userId, dto);
+  }
+
+  @Patch('preferences')
+  updatePreferredPreferences(@Req() req, @Body() dto: UpdateAttributesDto) {
+    const userId = req.user.id;
+    return this.userService.updatePreferredPreferences(userId, dto);
+  }
+}
