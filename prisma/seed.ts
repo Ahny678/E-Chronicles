@@ -8,12 +8,12 @@ import {
   Gender,
   Creative,
 } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
   const users = [
-    // Amy and variants
     {
       name: 'Amy',
       email: 'amy@example.com',
@@ -98,8 +98,6 @@ async function main() {
         creative: 'Choreography',
       },
     },
-
-    // Bob and variants
     {
       name: 'Bob',
       email: 'bob@example.com',
@@ -184,8 +182,6 @@ async function main() {
         creative: 'Filmmaking',
       },
     },
-
-    // Cleo and variants
     {
       name: 'Cleo',
       email: 'cleo@example.com',
@@ -273,11 +269,13 @@ async function main() {
   ];
 
   for (const user of users) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+
     const createdUser = await prisma.user.create({
       data: {
         name: user.name,
         email: user.email,
-        password: user.password,
+        password: hashedPassword,
         Attributes: {
           create: {
             musicGenre:
