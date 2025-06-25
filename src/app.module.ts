@@ -10,7 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MailerModule } from './mailer/mailer.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
-import { UsersController } from './users/users.controller';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -23,6 +25,16 @@ import { UsersController } from './users/users.controller';
         limit: 30, //30 requests per minute
       },
     ]),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver, // ✅ required in NestJS v10+
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: true,
+      installSubscriptionHandlers: true, // optional with Apollo 4 but still supported
+      subscriptions: {
+        'graphql-ws': true,
+      },
+    }),
+
     AuthModule,
     UsersModule,
     MailerModule,

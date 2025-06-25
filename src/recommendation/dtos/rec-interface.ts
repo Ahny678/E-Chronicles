@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 export type UserWithPreferences = Prisma.UserGetPayload<{
   include: {
@@ -17,6 +17,6 @@ export interface Attributes {
 }
 
 export interface Match {
-  userId: string;
+  user: User;
   score: number;
 }

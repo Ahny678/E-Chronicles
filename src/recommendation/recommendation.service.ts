@@ -48,7 +48,7 @@ export class RecommendationService {
 
       if (averageScore >= this.threshold) {
         matches.push({
-          userId: candidate.id,
+          user: candidate,
           score: averageScore,
         });
       }
