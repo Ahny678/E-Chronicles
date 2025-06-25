@@ -1,8 +1,51 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+enum MusicGenre {
+  Pop
+  Rock
+  Classical
+  Jazz
+  Afrobeat
+}
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+enum Personality {
+  Introvert
+  Extrovert
+  Ambivert
+}
+
+enum Religion {
+  Christian
+  Muslim
+  Buddhist
+  Atheist
+  Other
+}
+
+enum Age {
+  Age13to17
+  Age18to25
+  Age26to35
+  Age36to45
+  Age46Above
+}
+
+enum Gender {
+  Male
+  Female
+  Other
+}
+
+enum Creative {
+  Writing
+  Photography
+  Illustration
+  FashionDesign
+  Filmmaking
+  Choreography
+  Music
+  Handcraft
+  Poetry
+}
+
 
 datasource db {
   provider = "postgresql"
@@ -11,6 +54,18 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+}
+
+model User{
+  id  String  @id @default(uuid())
+  name String 
+  password String
+  email String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  diaryEntries DiaryEntry[]
+  Attributes         Attributes?
+  Preferences    Preferences?
 }
 
 model DiaryEntry{
@@ -27,13 +82,28 @@ model DiaryEntry{
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model User{
-  id  String  @id @default(uuid())
-  name String 
-  password String
-  email String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  diaryEntries DiaryEntry[]
+
+
+model Attributes {
+  id           String       @id @default(uuid())
+  userId       String       @unique
+  user         User         @relation(fields: [userId], references: [id])
+  musicGenre   MusicGenre
+  personality  Personality
+  religion     Religion
+  age          Age
+  gender       Gender
+  creative     Creative
 }
 
+model Preferences {
+  id           String       @id @default(uuid())
+  userId       String       @unique
+  user         User         @relation(fields: [userId], references: [id])
+  musicGenre   MusicGenre
+  personality  Personality
+  religion     Religion
+  age          Age
+  gender       Gender
+  creative     Creative
+}
