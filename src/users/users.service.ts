@@ -4,11 +4,14 @@ import * as bcrypt from 'bcrypt';
 
 import { SignupDto } from 'src/auth/dtos/signup.dto';
 import { MailerService } from 'src/mailer/mailer.service';
+import { RecommendationService } from 'src/recommendation/recommendation.service';
+import { match } from 'node:assert';
 @Injectable()
 export class UsersService {
   constructor(
     private prismaService: PrismaService,
     private mailerService: MailerService,
+    private matchService: RecommendationService,
   ) {}
 
   async createuser(data: SignupDto) {
@@ -67,7 +70,20 @@ export class UsersService {
       },
     });
   }
+  async getTopFiveMatches(userId) {
+    const users = await this.prismaService.user.findMany({
+      include: {
+        Attributes: true,
+        Preferences: true,
+      },
+    });
+    const currentUser = users.find((user) => user.id === userId);
+
+    if (!currentUser) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    return this.matchService.evaluateMatches(currentUser, users);
+  }
 }
 
-//seed users
 //view top 5 matches

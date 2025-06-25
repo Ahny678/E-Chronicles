@@ -1,4 +1,12 @@
-import { Body, Controller, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdatePreferencesDto } from './dtos/update-pref.dtos';
 import { UpdateAttributesDto } from './dtos/update-attr.dto';
@@ -18,5 +26,11 @@ export class UsersController {
   updatePreferredPreferences(@Req() req, @Body() dto: UpdateAttributesDto) {
     const userId = req.user.id;
     return this.userService.updatePreferredPreferences(userId, dto);
+  }
+
+  @Get('my-matches')
+  getMatches(@Req() req) {
+    const userId = req.user.id;
+    return this.userService.getTopFiveMatches(userId);
   }
 }
