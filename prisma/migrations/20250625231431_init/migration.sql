@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+
+-- CreateEnum
 CREATE TYPE "MusicGenre" AS ENUM ('Pop', 'Rock', 'Classical', 'Jazz', 'Afrobeat');
 
 -- CreateEnum
@@ -72,6 +75,27 @@ CREATE TABLE "Preferences" (
     CONSTRAINT "Preferences_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "PenpalRequest" (
+    "id" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "receiverId" TEXT NOT NULL,
+    "status" "RequestStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "PenpalRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PenpalConnection" (
+    "id" TEXT NOT NULL,
+    "user1Id" TEXT NOT NULL,
+    "user2Id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "PenpalConnection_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -89,3 +113,15 @@ ALTER TABLE "Attributes" ADD CONSTRAINT "Attributes_userId_fkey" FOREIGN KEY ("u
 
 -- AddForeignKey
 ALTER TABLE "Preferences" ADD CONSTRAINT "Preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PenpalRequest" ADD CONSTRAINT "PenpalRequest_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PenpalRequest" ADD CONSTRAINT "PenpalRequest_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PenpalConnection" ADD CONSTRAINT "PenpalConnection_user1Id_fkey" FOREIGN KEY ("user1Id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PenpalConnection" ADD CONSTRAINT "PenpalConnection_user2Id_fkey" FOREIGN KEY ("user2Id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

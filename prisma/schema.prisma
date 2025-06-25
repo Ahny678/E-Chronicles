@@ -1,3 +1,8 @@
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
 enum MusicGenre {
   Pop
   Rock
@@ -56,17 +61,24 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User{
-  id  String  @id @default(uuid())
-  name String 
-  password String
-  email String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  diaryEntries DiaryEntry[]
-  Attributes         Attributes?
-  Preferences    Preferences?
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  password   String
+  email      String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  diaryEntries  DiaryEntry[]
+
+  Attributes  Attributes?
+  Preferences Preferences?
+
+  sentRequests     PenpalRequest[] @relation("SentRequests")
+  receivedRequests PenpalRequest[] @relation("ReceivedRequests")
+  connection1      PenpalConnection[] @relation("Connection1")
+  connection2      PenpalConnection[] @relation("Connection2")
 }
+
 
 model DiaryEntry{
   id  String  @id @default(uuid())
@@ -107,3 +119,26 @@ model Preferences {
   gender       Gender
   creative     Creative
 }
+
+model PenpalRequest {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+  
+  sender     User     @relation("SentRequests", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
+}
+
+model PenpalConnection {
+  id        String   @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  
+  user1     User     @relation("Connection1", fields: [user1Id], references: [id])
+  user2     User     @relation("Connection2", fields: [user2Id], references: [id])
+}
+
+
