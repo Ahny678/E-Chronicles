@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PenpalRequestAcceptedPayload {
+  senderId: String!
+  receiverId: String!
+}
+
 type UserEntity {
   id: ID!
   name: String!
@@ -29,8 +34,10 @@ type Query {
 
 type Mutation {
   sendPenpalRequest(receiverId: String!): Boolean!
+  handlePenpalRequest(requestId: String!, action: String!): Boolean!
 }
 
 type Subscription {
   penpalRequestReceived: PenpalRequest!
+  penpalRequestAccepted: PenpalRequestAcceptedPayload!
 }

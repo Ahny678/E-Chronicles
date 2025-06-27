@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { MailerModule } from './mailer/mailer.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
 import { GraphqlConfigModule } from './graphql/graphql.module';
+import { PenpalModule } from './penpal/penpal.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { GraphqlConfigModule } from './graphql/graphql.module';
     UsersModule,
     MailerModule,
     RecommendationModule,
+    PenpalModule,
   ],
   controllers: [AppController],
   providers: [

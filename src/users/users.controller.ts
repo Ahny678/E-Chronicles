@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdatePreferencesDto } from './dtos/update-pref.dtos';
-import { UpdateAttributesDto } from './dtos/update-attr.dto';
+import { UpdatePreferencesDto } from '../penpal/dtos/update-pref.dtos';
+import { UpdateAttributesDto } from '../penpal/dtos/update-attr.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @UseGuards(AuthGuard)
