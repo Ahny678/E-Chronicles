@@ -2,18 +2,20 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type PenpalRequest {
-  id: String!
-  senderId: String!
-  receiverId: String!
-  status: RequestStatus!
-  createdAt: DateTime!
+type UserEntity {
+  id: ID!
+  name: String!
+  email: String!
 }
 
-enum RequestStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
+type PenpalRequest {
+  id: ID!
+  senderId: String!
+  receiverId: String!
+  status: String!
+  createdAt: DateTime!
+  sender: UserEntity!
+  receiver: UserEntity!
 }
 
 """
