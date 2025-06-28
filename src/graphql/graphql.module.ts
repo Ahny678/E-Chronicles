@@ -49,6 +49,10 @@ import { JwtService } from '@nestjs/jwt';
                 user: connection.context?.user,
                 headers: connection.context?.headers || {},
                 connectionParams: connection.context, // Make sure connectionParams are available
+                ip:
+                  connection.context?.ip ||
+                  req?.ip ||
+                  req?.connection?.remoteAddress,
               },
             };
           }

@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsBoolean } from 'class-validator';
+
 export class CreateEntryDto {
   @IsString()
   @IsNotEmpty()
@@ -11,4 +12,7 @@ export class CreateEntryDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+  @IsBoolean()
+  isPrivate: boolean;
 }

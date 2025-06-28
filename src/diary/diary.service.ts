@@ -1,16 +1,24 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEntryDto } from './dtos/create-diary.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UpdateEntryDto } from './dtos/update-diary.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { userInfo } from 'os';
+import { PUB_SUB } from 'src/pubsub/constants/pubsubs.constants';
+import { RedisPubSub } from 'graphql-redis-subscriptions';
+import { NEW_DIARY_POST } from 'src/pubsub/pubsub.events';
 
 @Injectable()
 export class DiaryService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly cloudinary: CloudinaryService,
+    @Inject(PUB_SUB) private pubSub: RedisPubSub,
   ) {}
 
   async create(
@@ -64,6 +72,7 @@ export class DiaryService {
           title: body.title,
           mood: body.mood,
           content: body.content,
+          isPrivate: body.isPrivate,
           image: imageUrl,
           video: videoUrl,
           audio: audioUrl,
@@ -71,6 +80,9 @@ export class DiaryService {
         },
       });
 
+      if (!body.isPrivate) {
+        await this.sendToPal(userId, diaryEntry);
+      }
       return diaryEntry;
     } catch (error) {
       console.error('Error creating diary entry:', error);
@@ -117,5 +129,30 @@ export class DiaryService {
         throw new Error(`Diary entry with id '${id}' does not exist.`);
       }
     }
+  }
+  async sendToPal(userId, diaryEntry) {
+    const connection = await this.prismaService.penpalConnection.findFirst({
+      where: {
+        OR: [{ user1Id: userId }, { user2Id: userId }],
+      },
+    });
+    if (connection) {
+      const penPalId =
+        connection.user1Id === userId ? connection.user2Id : connection.user1Id;
+      const hydratedEntry = await this.prismaService.diaryEntry.findUnique({
+        where: { id: diaryEntry.id },
+        include: {
+          user: true, // Load user relation
+        },
+      });
+
+      await this.pubSub.publish(NEW_DIARY_POST, {
+        newDiaryEntryPosted: {
+          entry: hydratedEntry,
+          penPalId,
+        },
+      });
+    }
+    console.log('successfully published');
   }
 }

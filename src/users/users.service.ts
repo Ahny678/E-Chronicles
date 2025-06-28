@@ -28,13 +28,13 @@ export class UsersService {
         },
       });
 
-      // await this.mailerService.sendEmail({
-      //   receipients: [{ name, address: email }],
-      //   subject: '🎉 Welcome to Our App!',
-      //   html: `<h1>Hi ${name},</h1><p>Your account was created successfully.</p>`,
-      // });
+      await this.mailerService.sendEmail({
+        receipients: [{ name, address: email }],
+        subject: '🎉 Welcome to Our App!',
+        html: `<h1>Hi ${name},</h1><p>Your account was created successfully.</p>`,
+      });
 
-      // return { name, email };
+      return { name, email };
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error('Error creating user:', err.message);

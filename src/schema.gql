@@ -2,15 +2,40 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type PenpalRequestAcceptedPayload {
-  senderId: String!
-  receiverId: String!
-}
-
 type UserEntity {
   id: ID!
   name: String!
   email: String!
+}
+
+type DiaryEntry {
+  id: ID!
+  title: String!
+  mood: String!
+  content: String!
+  image: String
+  video: String
+  audio: String
+  isPrivate: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userId: String!
+  user: UserEntity!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DiaryEntryEvent {
+  entry: DiaryEntry!
+  penPalId: String!
+}
+
+type PenpalRequestAcceptedPayload {
+  senderId: String!
+  receiverId: String!
 }
 
 type PenpalRequest {
@@ -23,11 +48,6 @@ type PenpalRequest {
   receiver: UserEntity!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Query {
   getAllPenpalRequests: [PenpalRequest!]!
 }
@@ -38,6 +58,7 @@ type Mutation {
 }
 
 type Subscription {
+  newDiaryEntryPosted: DiaryEntryEvent!
   penpalRequestReceived: PenpalRequest!
   penpalRequestAccepted: PenpalRequestAcceptedPayload!
 }

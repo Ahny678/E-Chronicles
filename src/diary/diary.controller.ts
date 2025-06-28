@@ -39,7 +39,7 @@ export class DiaryController {
       image?: Express.Multer.File[];
       video?: Express.Multer.File[];
       audio?: Express.Multer.File[];
-    },
+    } = {},
     @Body() body: CreateEntryDto,
     @Req() { user },
   ) {
