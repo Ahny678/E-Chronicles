@@ -40,6 +40,7 @@ CREATE TABLE "DiaryEntry" (
     "image" TEXT,
     "video" TEXT,
     "audio" TEXT,
+    "isPrivate" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
