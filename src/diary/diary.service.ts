@@ -65,6 +65,7 @@ export class DiaryService {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         audioUrl = uploadResult.secure_url;
       }
+      // const isPrivate = body.isPrivate?.toString() === 'true';
 
       // Create diary entry in the database
       const diaryEntry = await this.prismaService.diaryEntry.create({
