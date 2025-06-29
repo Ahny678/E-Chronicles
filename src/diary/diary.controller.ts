@@ -28,7 +28,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateDiaryResponseDto } from './dtos/OpenApiResponses/create-diary-response.dto';
 import { UploadEntryWithBodyDto } from './dtos/upload-files.dto';
-import { DiaryEntry } from './entites/diary.entity';
+//import { DiaryEntry } from './entites/diary.entity';
 import { GetDiaryResponseDto } from './dtos/OpenApiResponses/get-diaries-response.dto';
 
 /**

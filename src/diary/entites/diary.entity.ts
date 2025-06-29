@@ -36,6 +36,6 @@ export class DiaryEntry {
   @Field()
   userId: string;
 
-  @Field(() => UserEntity)
-  user: UserEntity;
+  // @Field(() => UserEntity)
+  // user: UserEntity;
 }

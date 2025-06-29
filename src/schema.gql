@@ -2,12 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserEntity {
-  id: ID!
-  name: String!
-  email: String!
-}
-
 type DiaryEntry {
   id: ID!
   title: String!
@@ -20,7 +14,6 @@ type DiaryEntry {
   createdAt: DateTime!
   updatedAt: DateTime!
   userId: String!
-  user: UserEntity!
 }
 
 """
@@ -28,14 +21,24 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""Event returned when a new diary entry is posted"""
 type DiaryEntryEvent {
+  """The new diary entry data"""
   entry: DiaryEntry!
+
+  """The penPal ID of the recipient user"""
   penPalId: String!
 }
 
 type PenpalRequestAcceptedPayload {
   senderId: String!
   receiverId: String!
+}
+
+type UserEntity {
+  id: ID!
+  name: String!
+  email: String!
 }
 
 type PenpalRequest {
@@ -58,6 +61,7 @@ type Mutation {
 }
 
 type Subscription {
+  """Subscribe to new diary entries posted by your pen pal"""
   newDiaryEntryPosted: DiaryEntryEvent!
   penpalRequestReceived: PenpalRequest!
   penpalRequestAccepted: PenpalRequestAcceptedPayload!

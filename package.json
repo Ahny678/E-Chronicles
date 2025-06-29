@@ -37,6 +37,7 @@
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^6.8.2",
     "@types/nodemailer": "^6.4.17",
+    "altair-express-middleware": "^8.2.5",
     "apollo-server-express": "^3.13.0",
     "bcrypt": "^6.0.0",
     "buffer-to-stream": "^1.0.0",
