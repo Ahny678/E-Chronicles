@@ -15,14 +15,14 @@ export class DiaryEntry {
   @Field()
   content: string;
 
-  @Field({ nullable: true })
-  image?: string;
+  @Field(() => String, { nullable: true })
+  image?: string | null;
 
-  @Field({ nullable: true })
-  video?: string;
+  @Field(() => String, { nullable: true })
+  video?: string | null;
 
-  @Field({ nullable: true })
-  audio?: string;
+  @Field(() => String, { nullable: true })
+  audio?: string | null;
 
   @Field()
   isPrivate: boolean;

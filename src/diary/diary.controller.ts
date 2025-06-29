@@ -22,10 +22,14 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiParam,
+  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 import { CreateDiaryResponseDto } from './dtos/OpenApiResponses/create-diary-response.dto';
 import { UploadEntryWithBodyDto } from './dtos/upload-files.dto';
+import { DiaryEntry } from './entites/diary.entity';
+import { GetDiaryResponseDto } from './dtos/OpenApiResponses/get-diaries-response.dto';
 
 /**
  * Controller for diary-related actions
@@ -56,10 +60,6 @@ export class DiaryController {
     description: 'Upload entry with optional media files',
     type: UploadEntryWithBodyDto,
   })
-  @ApiResponse({
-    status: 201,
-    description: 'Diary entry created successfully.',
-  })
   @ApiResponse({ status: 400, description: 'Bad Request — invalid diary data' })
   @ApiResponse({
     status: 401,
@@ -80,25 +80,65 @@ export class DiaryController {
     return await this.diaryService.create(files, body, userId);
   }
 
+  /**
+   * Get all entires
+   *
+   * @returns TAn array of diary entries
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {500} Internal Server Error
+   */
+  @ApiQuery({ name: 'mood', required: false, example: 'tentative' })
   @Get()
-  findAll(@Req() { user }, @Query('mood') mood?: string) {
+  findAll(
+    @Req() { user },
+    @Query('mood') mood?: string,
+  ): Promise<GetDiaryResponseDto[]> {
     const userId = user.id;
     return this.diaryService.findAll(userId, mood);
   }
 
+  /**
+   * Get an entry by id
+   *
+   * @returns A diary entry
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {500} Internal Server Error
+   */
   @UseGuards(OwnerGuard)
+  @ApiParam({ name: 'id', required: true, example: 'insert diary id...' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<GetDiaryResponseDto> {
     return this.diaryService.findOne(id);
   }
-  @UseGuards(OwnerGuard)
+
+  /**
+   * Update an entry by id
+   *
+   * @returns Updated diary entry
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {500} Internal Server Error
+   */
+  @UseGuards(AuthGuard, OwnerGuard)
+  @ApiParam({ name: 'id', required: true, example: ' insert diary id...' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() newBody: UpdateEntryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() newBody: UpdateEntryDto,
+  ): Promise<GetDiaryResponseDto> {
     return this.diaryService.fixOne(id, newBody);
   }
+
+  /**
+   * Delete an entry by id
+   *
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {500} Internal Server Error
+   */
   @UseGuards(OwnerGuard)
+  @ApiParam({ name: 'id', required: true, example: ' insert diary id...' })
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.diaryService.delete(id);
+    this.diaryService.delete(id);
+    return { message: 'Diary entry deleted successfully' };
   }
 }

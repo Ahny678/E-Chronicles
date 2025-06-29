@@ -105,7 +105,7 @@ export class DiaryService {
       where: { id },
     });
     if (!entry) {
-      return 'Entry does not exit';
+      throw new Error('Entry does not exist');
     }
     return entry;
   }
@@ -117,10 +117,9 @@ export class DiaryService {
   }
   async delete(id: string) {
     try {
-      const deletedEntry = await this.prismaService.diaryEntry.delete({
+      await this.prismaService.diaryEntry.delete({
         where: { id },
       });
-      return deletedEntry;
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
