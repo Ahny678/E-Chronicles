@@ -1,3 +1,14 @@
+// src/enums/attributes/attributes.ts
+
+// export {
+//   MusicGenre,
+//   Personality,
+//   Religion,
+//   Age,
+//   Gender,
+//   Creative,
+// } from '@prisma/client';
+
 export enum MusicGenre {
   Pop = 'Pop',
   Rock = 'Rock',
@@ -20,16 +31,16 @@ export enum Religion {
   Other = 'Other',
 }
 export enum Age {
-  Age13to17 = '13-17',
-  Age18to25 = '18-25',
-  Age26to35 = '26-35',
-  Age36to45 = '36-45',
-  Age46Above = '46 above',
+  Age13to17 = 'Age13to17',
+  Age18to25 = 'Age18to25',
+  Age26to35 = 'Age26to35',
+  Age36to45 = 'Age36to45',
+  Age46Above = 'Age46Above',
 }
 export enum Gender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other',
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
 }
 
 export enum Creative {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Attributes, Match, UserWithPreferences } from './dtos/rec-interface';
+import { UserResponseWithAPDto } from 'src/users/dtos/OpenApiResponse/user-match-response.dto';
 
 @Injectable()
 export class RecommendationService {
@@ -48,7 +49,7 @@ export class RecommendationService {
 
       if (averageScore >= this.threshold) {
         matches.push({
-          user: candidate,
+          user: candidate as UserResponseWithAPDto,
           score: averageScore,
         });
       }

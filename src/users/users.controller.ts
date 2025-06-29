@@ -1,35 +1,63 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdatePreferencesDto } from '../penpal/dtos/update-pref.dtos';
-import { UpdateAttributesDto } from '../penpal/dtos/update-attr.dto';
+import { UpdatePreferencesDto } from './dtos/update-pref.dto';
+import { UpdateAttributesDto } from './dtos/update-attr.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { UserAttributesResponseDto } from './dtos/OpenApiResponse/user-attr-response.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { UserPreferencesResponseDto } from './dtos/OpenApiResponse/user-pref-response.dto';
+import { UserMatchResponseDto } from './dtos/OpenApiResponse/user-match-response.dto';
 
+/**
+ * Controller for user-related actions
+ */
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+  /**
+   * Update user's attributes
+   *
+   * @returns The updated attributes object
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {400} Bad Request — invalid atrributes data
+   */
   @Patch('attributes')
-  updateUserPreferences(@Req() req, @Body() dto: UpdatePreferencesDto) {
+  updateUserPreferences(
+    @Req() req,
+    @Body() dto: UpdateAttributesDto,
+  ): Promise<UserAttributesResponseDto> {
     const userId = req.user.id;
-    return this.userService.updateUserPreferences(userId, dto);
+    return this.userService.updateAttributes(userId, dto);
   }
+
+  /**
+   * Update user's preferences
+   *
+   * @returns The updated preferences object
+   * @throws {401} Unauthorized — user not authenticated
+   * @throws {400} Bad Request — invalid preference data
+   */
 
   @Patch('preferences')
-  updatePreferredPreferences(@Req() req, @Body() dto: UpdateAttributesDto) {
+  updatePreferredPreferences(
+    @Req() req,
+    @Body() dto: UpdatePreferencesDto,
+  ): Promise<UserPreferencesResponseDto> {
     const userId = req.user.id;
-    return this.userService.updatePreferredPreferences(userId, dto);
+    return this.userService.updatePreferences(userId, dto);
   }
 
+  /**
+   * Get user's top matches
+   *
+   * @returns The updated attributes object
+   * @throws {401} Unauthorized — user not authenticated
+   
+   */
   @Get('my-matches')
-  getMatches(@Req() req) {
+  getMatches(@Req() req): Promise<UserMatchResponseDto[]> {
     const userId = req.user.id;
     return this.userService.getTopFiveMatches(userId);
   }

@@ -5,7 +5,19 @@ import * as bcrypt from 'bcrypt';
 import { SignupDto } from 'src/auth/dtos/signup.dto';
 import { MailerService } from 'src/mailer/mailer.service';
 import { RecommendationService } from 'src/recommendation/recommendation.service';
-import { match } from 'node:assert';
+
+//* TO SOLVE CONFLICT BETWEEN PRISMA AND TYPESCRIPT ENUMS FOR API DOCUMENTATION */
+import {
+  MusicGenre as AppMusicGenre,
+  Personality as AppPersonality,
+  Religion as AppReligion,
+  Age as AppAge,
+  Gender as AppGender,
+  Creative as AppCreative,
+} from 'src/enums/atrributes/attributes';
+
+/* */
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -49,8 +61,8 @@ export class UsersService {
     return this.prismaService.user.findUnique({ where: { email } });
   }
 
-  async updateUserPreferences(userId, dto) {
-    return this.prismaService.attributes.upsert({
+  async updateAttributes(userId, dto) {
+    const updatedUserAttr = await this.prismaService.attributes.upsert({
       where: { userId },
       //If such a record exists, the update block will be used. If not, the create block will be used.
       update: { ...dto },
@@ -59,9 +71,19 @@ export class UsersService {
         ...dto,
       },
     });
+    return {
+      id: updatedUserAttr.id,
+      userId: updatedUserAttr.userId,
+      musicGenre: updatedUserAttr.musicGenre as AppMusicGenre,
+      personality: updatedUserAttr.personality as AppPersonality,
+      religion: updatedUserAttr.religion as AppReligion,
+      age: updatedUserAttr.age as AppAge,
+      gender: updatedUserAttr.gender as AppGender,
+      creative: updatedUserAttr.creative as AppCreative,
+    };
   }
-  async updatePreferredPreferences(userId, dto) {
-    return this.prismaService.attributes.upsert({
+  async updatePreferences(userId, dto) {
+    const updatedUserPref = await this.prismaService.preferences.upsert({
       where: { userId },
       update: { ...dto },
       create: {
@@ -69,6 +91,16 @@ export class UsersService {
         ...dto,
       },
     });
+    return {
+      id: updatedUserPref.id,
+      userId: updatedUserPref.userId,
+      musicGenre: updatedUserPref.musicGenre as AppMusicGenre,
+      personality: updatedUserPref.personality as AppPersonality,
+      religion: updatedUserPref.religion as AppReligion,
+      age: updatedUserPref.age as AppAge,
+      gender: updatedUserPref.gender as AppGender,
+      creative: updatedUserPref.creative as AppCreative,
+    };
   }
   async getTopFiveMatches(userId) {
     const users = await this.prismaService.user.findMany({

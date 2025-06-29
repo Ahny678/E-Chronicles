@@ -19,6 +19,7 @@ async function bootstrap() {
     .setDescription('Write and share electronic diary with your penpals!')
     .setVersion('1.0')
     .addTag('diary')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

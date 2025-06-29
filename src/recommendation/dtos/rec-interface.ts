@@ -1,4 +1,5 @@
 import { Prisma, User } from '@prisma/client';
+import { UserResponseWithAPDto } from 'src/users/dtos/OpenApiResponse/user-match-response.dto';
 
 export type UserWithPreferences = Prisma.UserGetPayload<{
   include: {
@@ -17,6 +18,6 @@ export interface Attributes {
 }
 
 export interface Match {
-  user: User;
+  user: UserResponseWithAPDto;
   score: number;
 }
