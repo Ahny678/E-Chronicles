@@ -116,7 +116,14 @@ mutation SendPenpalRequest($receiverId: String!) {
     return this.pubSub.asyncIterator(PENPAL_REQUEST_RECEIVED);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: `Accept or Decline a Penpal Request
+    **MUTATION FORMAT **
+    mutation HandlePenpalRequest($requestId: String!, $action:String!){
+  handlePenpalRequest(requestId: $requestId,action: $action)
+}
+    `,
+  })
   async handlePenpalRequest(
     @Args('requestId') requestId: string,
     @Args('action') action: 'ACCEPT' | 'DECLINE',
@@ -148,6 +155,15 @@ mutation SendPenpalRequest($receiverId: String!) {
     }
   }
   @Subscription(() => PenpalRequestAcceptedPayload, {
+    description: `Get notified on accepted requests
+    ** SUBSCRIPTION FORMAT **
+    subscription PenpalRequestAccepted {
+  penpalRequestAccepted {
+    senderId
+    receiverId
+}
+}
+    `,
     filter: (payload, _, context) => {
       // Only send to the sender of the request
       return payload.penpalRequestAccepted.senderId === context.req.user.id;

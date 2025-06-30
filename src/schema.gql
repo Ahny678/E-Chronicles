@@ -66,6 +66,8 @@ type Mutation {
   }
   """
   sendPenpalRequest(receiverId: String!): Boolean!
+
+  "Accept or Decline a Penpal Request\n    **MUTATION FORMAT **\n    mutation HandlePenpalRequest($requestId: String!, $action:String!){\n  handlePenpalRequest(requestId: $requestId,action: $action)\n}\n    "
   handlePenpalRequest(requestId: String!, action: String!): Boolean!
 }
 
@@ -75,5 +77,7 @@ type Subscription {
 
   "Listen for penpal requests\n    **Subscription Format**\n    subscription PenpalRequestReceived {\n  penpalRequestReceived {\n    id\n    senderId\n    receiverId\n    sender {\n      id\n      name\n    }\n    receiver {\n      id\n      name\n    }\n    createdAt\n  }\n}\n    "
   penpalRequestReceived: PenpalRequest!
+
+  "Get notified on accepted requests\n    ** SUBSCRIPTION FORMAT **\n    subscription PenpalRequestAccepted {\n  penpalRequestAccepted {\n    senderId\n    receiverId\n}\n}\n    "
   penpalRequestAccepted: PenpalRequestAcceptedPayload!
 }

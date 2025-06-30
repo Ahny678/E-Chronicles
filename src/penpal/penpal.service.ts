@@ -51,6 +51,7 @@ export class PenpalService {
       },
     });
   }
+
   async acceptPenPalRequest(RequestId, request) {
     // Check for existing connection (both directions)
 
