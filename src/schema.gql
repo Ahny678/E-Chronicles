@@ -72,7 +72,7 @@ type Mutation {
 }
 
 type Subscription {
-  """Subscribe to new diary entries posted by your pen pal"""
+  "Subscribe to new diary entries posted by your pen pal \n    **SUB Format**\n    subscription newDiaryPosted {\n  newDiaryEntryPosted {\n    penPalId\n    entry {\n      id\n      title\n      mood\n      content\n      image\n      video\n      audio\n      isPrivate\n      createdAt\n      updatedAt\n      userId\n    }\n  }\n}\n    "
   newDiaryEntryPosted: DiaryEntryEvent!
 
   "Listen for penpal requests\n    **Subscription Format**\n    subscription PenpalRequestReceived {\n  penpalRequestReceived {\n    id\n    senderId\n    receiverId\n    sender {\n      id\n      name\n    }\n    receiver {\n      id\n      name\n    }\n    createdAt\n  }\n}\n    "

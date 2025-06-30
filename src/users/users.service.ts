@@ -15,6 +15,7 @@ import {
   Gender as AppGender,
   Creative as AppCreative,
 } from 'src/enums/atrributes/attributes';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 /* */
 
@@ -116,6 +117,14 @@ export class UsersService {
     }
     return this.matchService.evaluateMatches(currentUser, users);
   }
-}
 
-//view top 5 matches
+  async severeConnection(userId) {
+    try {
+      await this.prismaService.penpalConnection.deleteMany({
+        where: { OR: [{ user1Id: userId }, { user2Id: userId }] },
+      });
+    } catch (error) {
+      throw new Error(`User does not have an existsing connection`);
+    }
+  }
+}

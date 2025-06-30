@@ -75,9 +75,8 @@ export class PenpalService {
     if (existingConnection) {
       throw new Error('One of the users already have a connection.');
     }
-    this.prismaService.penpalRequest.update({
+    await this.prismaService.penpalRequest.delete({
       where: { id: RequestId },
-      data: { status: 'ACCEPTED' },
     });
 
     await this.prismaService.penpalConnection.create({
