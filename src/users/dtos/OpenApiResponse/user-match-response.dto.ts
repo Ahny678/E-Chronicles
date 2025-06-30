@@ -17,13 +17,6 @@ export class UserResponseWithAPDto {
    */
   @IsUUID()
   name: string;
-
-  /** User hashed password
-   * @example "password"
-   */
-  @IsString()
-  password: string;
-
   /** User email
    * @example "liam.perfect@example.com"
    */

@@ -5,15 +5,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PenpalService {
   constructor(private prismaService: PrismaService) {}
   async createPenRequest(senderId, receiverId) {
+    if (!receiverId || typeof receiverId !== 'string') {
+      throw new Error('Invalid receiverId');
+    }
+    if (senderId === receiverId) {
+      throw new Error('You cannot send a request to yourself');
+    }
+
     const currentReq = await this.prismaService.penpalRequest.findFirst({
       where: {
-        senderId,
-        receiverId,
+        OR: [
+          { senderId, receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
       },
     });
     if (currentReq) {
-      throw new Error('You have already sent request to this person');
+      throw new Error('A request already exists between these users');
     }
+
     return this.prismaService.penpalRequest.create({
       data: { senderId, receiverId },
       include: {

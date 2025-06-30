@@ -31,15 +31,40 @@ export class PenpalResolver {
     private penService: PenpalService,
   ) {}
 
-  @Query(() => [PenpalRequest])
+  @Query(() => [PenpalRequest], {
+    description: `Get pending Penpal Requests
+    **Query Structure**
+    query{
+  getAllPenpalRequests {
+    id
+    senderId
+    receiverId
+    status
+    createdAt
+    sender {
+      id
+      name
+    }
+  }
+}    
+    `,
+  })
   async getAllPenpalRequests(@Context() context) {
     const userId = context.req.user.id;
     return this.penService.getMyPenPalRequests(userId);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, {
+    description: `Send a pen pal request to another user.
+
+**Mutation Structure:**
+mutation SendPenpalRequest($receiverId: String!) {
+  sendPenpalRequest(receiverId: $receiverId)
+}`,
+  })
   async sendPenpalRequest(
-    @Args('receiverId') receiverId: string,
+    @Args('receiverId')
+    receiverId: string,
     @Context() context,
   ) {
     const senderId = context.req.user.id;
@@ -54,11 +79,26 @@ export class PenpalResolver {
   }
 
   @Subscription(() => PenpalRequest, {
-    filter: (payload, variables, context) => {
-      // console.log('Subscription Context:', context);
-      // console.log('Payload:', payload);
-      // console.log('Variables:', variables);
-
+    description: `Listen for penpal requests
+    **Subscription Format**
+    subscription PenpalRequestReceived {
+  penpalRequestReceived {
+    id
+    senderId
+    receiverId
+    sender {
+      id
+      name
+    }
+    receiver {
+      id
+      name
+    }
+    createdAt
+  }
+}
+    `,
+    filter: (payload, _, context) => {
       const userId = context.req?.user?.id;
       if (!userId) {
         console.error('No user ID found in context');
@@ -76,7 +116,6 @@ export class PenpalResolver {
     return this.pubSub.asyncIterator(PENPAL_REQUEST_RECEIVED);
   }
 
-  //ACCEPT LOGIC
   @Mutation(() => Boolean)
   async handlePenpalRequest(
     @Args('requestId') requestId: string,

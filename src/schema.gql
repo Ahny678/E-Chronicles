@@ -52,10 +52,19 @@ type PenpalRequest {
 }
 
 type Query {
+  "Get pending Penpal Requests\n    **Query Structure**\n    query{\n  getAllPenpalRequests {\n    id\n    senderId\n    receiverId\n    status\n    createdAt\n    sender {\n      id\n      name\n    }\n  }\n}    \n    "
   getAllPenpalRequests: [PenpalRequest!]!
 }
 
 type Mutation {
+  """
+  Send a pen pal request to another user.
+  
+  **Mutation Structure:**
+  mutation SendPenpalRequest($receiverId: String!) {
+    sendPenpalRequest(receiverId: $receiverId)
+  }
+  """
   sendPenpalRequest(receiverId: String!): Boolean!
   handlePenpalRequest(requestId: String!, action: String!): Boolean!
 }
@@ -63,6 +72,8 @@ type Mutation {
 type Subscription {
   """Subscribe to new diary entries posted by your pen pal"""
   newDiaryEntryPosted: DiaryEntryEvent!
+
+  "Listen for penpal requests\n    **Subscription Format**\n    subscription PenpalRequestReceived {\n  penpalRequestReceived {\n    id\n    senderId\n    receiverId\n    sender {\n      id\n      name\n    }\n    receiver {\n      id\n      name\n    }\n    createdAt\n  }\n}\n    "
   penpalRequestReceived: PenpalRequest!
   penpalRequestAccepted: PenpalRequestAcceptedPayload!
 }
