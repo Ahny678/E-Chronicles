@@ -13,6 +13,14 @@ import { JwtService } from '@nestjs/jwt';
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         playground: false, // Altair replaces this
         installSubscriptionHandlers: true,
+        csrfPrevention: {
+          // Allow requests with these headers:
+          requestHeaders: [
+            'Content-Type',
+            'X-Apollo-Operation-Name',
+            'Apollo-Require-Preflight',
+          ],
+        },
 
         subscriptions: {
           'graphql-ws': {

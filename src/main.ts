@@ -10,7 +10,18 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
-  app.enableCors();
+  // app.enableCors();
+  app.enableCors({
+    origin: true, // or specify your frontend URL
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Apollo-Operation-Name',
+      'Apollo-Require-Preflight',
+    ],
+    credentials: true,
+  });
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
@@ -28,6 +39,11 @@ async function bootstrap() {
     altairExpress({
       endpointURL: '/graphql',
       subscriptionsEndpoint: process.env.GraphqlEndpoint,
+      initialHeaders: {
+        'Content-Type': 'application/json', // Required for CSRF bypass
+        // Optional: Add if still facing issues
+        'Apollo-Require-Preflight': 'true',
+      },
     }),
   );
   await app.listen(process.env.PORT ?? 3000);
